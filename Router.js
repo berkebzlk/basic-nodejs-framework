@@ -10,23 +10,23 @@ class Router {
   get(uri, controller) {
     return this.add("GET", uri, controller);
   }
-  post(uri, method) {
+  post(uri, controller) {
     return this.add("POST", uri, controller);
   }
-  delete(uri, method) {
+  delete(uri, controller) {
     return this.add("DELETE", uri, controller);
   }
-  put(uri, method) {
+  put(uri, controller) {
     return this.add("PUT", uri, controller);
   }
-  patch(uri, method) {
+  patch(uri, controller) {
     return this.add("PATCH", uri, controller);
   }
 
-  route(uri, method) {
+  route(uri, method, req, res) {
     this.routes.forEach((route) => {
       if (route.uri === uri && route.method === method) {
-        return route.controller();
+        return route.controller(req, res);
       }
     });
   }
