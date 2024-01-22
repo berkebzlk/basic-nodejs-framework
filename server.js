@@ -1,10 +1,11 @@
 
-const exampleRouter = require("./routes");
+const exampleRouter1 = require("./routes/exampleRoutes1");
+const exampleRouter2 = require("./routes/exampleRoutes2");
 const App = require('./Core/App');
 
 const app = new App();
-
-app.use('/uri', exampleRouter);
+app.use('/uri1', exampleRouter1);
+app.use('/uri2', exampleRouter2);
 
 const PORT = 5000;
 

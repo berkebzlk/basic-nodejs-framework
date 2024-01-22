@@ -25,14 +25,18 @@ class Router {
 
   route(uri, method, req, res) {
 
+    let uriFound = false
+
     this.routes.forEach((route) => {
       if (route.uri === uri && route.method === method) {
         route.controller(req, res);
-        return
+        uriFound = true
       }
-
-      res.status(404).json('No such route')
     });
+    
+    if (!uriFound) {
+      res.status(404).json('No such route')
+    }
   }
 }
 

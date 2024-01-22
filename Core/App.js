@@ -24,7 +24,6 @@ class App {
 
     listen(port, callback) {
         const server = http.createServer((req, res) => {
-
             res.setHeader('Content-Type', 'application/json');
             res.status = (statusCode) => {
                 res.statusCode = statusCode;
@@ -33,7 +32,6 @@ class App {
             res.json = (json) => {
                 res.write(JSON.stringify(json))
                 return res.end();
-
             }
 
             const parsedUrl = url.parse(req.url, true);
