@@ -24,10 +24,14 @@ class Router {
   }
 
   route(uri, method, req, res) {
+
     this.routes.forEach((route) => {
       if (route.uri === uri && route.method === method) {
-        return route.controller(req, res);
+        route.controller(req, res);
+        return
       }
+
+      res.status(404).json('No such route')
     });
   }
 }
