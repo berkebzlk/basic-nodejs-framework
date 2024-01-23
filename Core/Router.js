@@ -1,41 +1,56 @@
 class Router {
-  routes = [];
+  constructor() {
+    this.routes = {
+      get: {},
+      post: {},
+      put: {},
+      patch: {},
+      delete: {},
+    };
+  }
 
-  add(method, uri, controller) {
-    this.routes.push({ method, uri, controller });
-
+  get(uri, ...handlers) {
+    console.log(handlers.length)
+    this.routes.get[uri] = handlers;
     return this;
   }
 
-  get(uri, controller) {
-    return this.add("GET", uri, controller);
-  }
-  post(uri, controller) {
-    return this.add("POST", uri, controller);
-  }
-  delete(uri, controller) {
-    return this.add("DELETE", uri, controller);
-  }
-  put(uri, controller) {
-    return this.add("PUT", uri, controller);
-  }
-  patch(uri, controller) {
-    return this.add("PATCH", uri, controller);
+  post(uri, ...handlers) {
+    this.routes.post[uri] = handlers;
+    return this;
   }
 
-  route(uri, method, req, res) {
+  put(uri, ...handlers) {
+    this.routes.put[uri] = handlers;
+    return this;
+  }
 
-    let uriFound = false
+  patch(uri, ...handlers) {
+    this.routes.patch[uri] = handlers;
+    return this;
+  }
 
-    this.routes.forEach((route) => {
-      if (route.uri === uri && route.method === method) {
-        route.controller(req, res);
-        uriFound = true
-      }
-    });
-    
-    if (!uriFound) {
-      res.status(404).json('No such route')
+  delete(uri, ...handlers) {
+    this.routes.delete[uri] = handlers;
+    return this;
+  }
+
+  route(uri, httpMethod, req, res) {
+    const handlers = this.routes[httpMethod][uri];
+    console.log(handlers.length)
+    if (handlers) {
+      const executeHandlers = (index) => {
+        if (index < handlers.length) {
+          const currentHandler = handlers[index];
+          currentHandler(req, res, () => {
+            executeHandlers(index + 1);
+          });
+        }
+      };
+
+      executeHandlers(0);
+    } else {
+      res.status(404).json('no such route');
     }
   }
 }

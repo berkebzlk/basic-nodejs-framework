@@ -8,18 +8,28 @@ class App {
         this.router = new Router();
     }
 
-    use(uri, Router) {
-        Router.routes.forEach(route => {
-            this.router.routes.push({
-                method: route.method,
-                uri: uri + route.uri,
-                controller: route.controller
-            })
-        })
+    get(uri, ...handlers) {
+        this.router.get(uri, ...handlers)
     }
 
-    route(uri, method, req, res) {
-        this.router.route(uri, method, req, res);
+    post(uri, ...handlers) {
+        this.router.post(uri, handlers)
+    }
+
+    put(uri, ...handlers) {
+        this.router.put(uri, handlers)
+    }
+
+    patch(uri, ...handlers) {
+        this.router.patch(uri, handlers)
+    }
+
+    delete(uri, ...handlers) {
+        this.router.delete(uri, handlers)
+    }
+
+    route(uri, httpMethod, req, res) {
+        this.router.route(uri, httpMethod, req, res);
     }
 
     listen(port, callback) {
@@ -40,7 +50,7 @@ class App {
 
             const httpMethod = req.method;
 
-            this.route(pathname, httpMethod, req, res)
+            this.route(pathname, httpMethod.toLocaleLowerCase(), req, res)
         });
 
         server.listen(port, callback);
