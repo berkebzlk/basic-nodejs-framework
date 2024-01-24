@@ -8,24 +8,32 @@ class App {
         this.router = new Router();
     }
 
+    use(uri, ...handlers) {
+        const httpMethods = ['get', 'post', 'put', 'patch', 'delete'];
+
+        httpMethods.forEach((httpMethod) => {
+            this.router[httpMethod](uri, ...handlers);
+        });
+    }
+
     get(uri, ...handlers) {
         this.router.get(uri, ...handlers)
     }
 
     post(uri, ...handlers) {
-        this.router.post(uri, handlers)
+        this.router.post(uri, ...handlers)
     }
 
     put(uri, ...handlers) {
-        this.router.put(uri, handlers)
+        this.router.put(uri, ...handlers)
     }
 
     patch(uri, ...handlers) {
-        this.router.patch(uri, handlers)
+        this.router.patch(uri, ...handlers)
     }
 
     delete(uri, ...handlers) {
-        this.router.delete(uri, handlers)
+        this.router.delete(uri, ...handlers)
     }
 
     route(uri, httpMethod, req, res) {

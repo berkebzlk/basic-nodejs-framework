@@ -10,7 +10,6 @@ class Router {
   }
 
   get(uri, ...handlers) {
-    console.log(handlers.length)
     this.routes.get[uri] = handlers;
     return this;
   }
@@ -37,7 +36,7 @@ class Router {
 
   route(uri, httpMethod, req, res) {
     const handlers = this.routes[httpMethod][uri];
-    console.log(handlers.length)
+    console.log(handlers)
     if (handlers) {
       const executeHandlers = (index) => {
         if (index < handlers.length) {
