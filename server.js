@@ -4,19 +4,23 @@ const Router = require('./Core/Router');
 const app = new App();
 const router = new Router();
 
-app.get('/uri', (req, res) => { console.log('berke'); res.json('berke') })
+router.get('/uri1', (req, res) => { console.log('handler1'); res.json('handler1') })
+router.get('/uri2', (req, res) => { console.log('handler2'); res.json('handler2') })
+router.get('/uri1', (req, res, next) => { console.log('middleware executed'); next(); }, (req, res) => { console.log('handler3'); res.json('handler3') })
+router.post('/postUri1', (req, res) => { res.json('postUri1') })
 
-app.get('/uri2', (req, res, next) => {console.log('middleware1'); next();}, 
-                    (req, res, next) => {console.log('middleware2'); next()}, 
-                    (req, res) => { console.log('berke2'); res.json('berke2') })
+const middleware1 = (req, res, next) => { console.log('middleware1'); next() }
+const middleware2 = (req, res, next) => { console.log('middleware2'); next() }
+const middleware3 = (req, res, next) => { console.log('middleware3'); next() }
+router.use(middleware1, middleware2, middleware3)
 
-app.use('/uri4', (req, res, next) => {
-    console.log('uri4 middleware 1'); next();
-}, (req, res) => {console.log('uri4 executed'); res.json('selam from use method')})
+router.get('/uri3', (req, res, next) => {console.log('uri3 middleware'); next();}, (req, res) => { console.log('uri3'); res.json('uri3') })
 
-app.get('/uri3', (req, res) => { console.log('berke3'); res.json('berke3') })
+router.use('/uri4', middleware1, (req, res) => {console.log('uri 4'); res.json('uri4 response')})
+
+app.router = router
+console.log(router.routerApplicationRoutes)
 
 const PORT = 5000;
 
-console.log(app.router)
 app.listen(5000, () => console.log('Server is listening on port', PORT));
