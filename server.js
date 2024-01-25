@@ -6,6 +6,7 @@ const userRouter = require('./router/index');
 const PORT = 5000;
 
 const verifyJwt = (req,res,next) => {
+    req.isJwtOK = true
     if(req.isJwtOK) next();
     // you can set req object in ./Core/App.js -> listen method
 }

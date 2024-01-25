@@ -144,8 +144,6 @@ class App {
     listen(port, callback) {
         const server = http.createServer((req, res) => {
 
-            req.isJwtOK = true;
-
             res.setHeader('Content-Type', 'application/json');
             res.status = (statusCode) => {
                 res.statusCode = statusCode;
