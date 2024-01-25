@@ -342,3 +342,69 @@ applicationRouter = {
 
 uri: '/rootUri/uri2', [GET] -> şartları sağladı
 */
+
+/*
+app.use çeşitleri
+app.use(uri, handler)
+app.use(uri, Router)
+app.use(middleware)
+----
+app.applicationRoutes = []
+
+app.use('/uri1', handler)
+
+applicationRoutes = [
+    {'get': {'/uri1', [handler]}},
+    {'post': {'/uri1', [handler]}},
+    {'put': {'/uri1', [handler]}},
+    {'patch': {'/uri1', [handler]}},
+    {'delete': {'/uri1', [handler]}}
+]
+
+app.use('/uri2', Router)
+
+applicationRoutes = [
+    {'get': {'/uri1', [handler]}},
+    {'post': {'/uri1', [handler]}},
+    {'put': {'/uri1', [handler]}},
+    {'patch': {'/uri1', [handler]}},
+    {'delete': {'/uri1', [handler]}},
+    {'get': {'/uri2', Router}},
+    {'post': {'/uri2', Router}},
+    {'put': {'/uri2', Router}},
+    {'patch': {'/uri2', Router}},
+    {'delete': {'/uri2', Router}},
+]
+
+app.use(middleware);
+
+applicationRoutes = [
+    {'get': {'/uri1', [handler]}},
+    {'post': {'/uri1', [handler]}},
+    {'put': {'/uri1', [handler]}},
+    {'patch': {'/uri1', [handler]}},
+    {'delete': {'/uri1', [handler]}},
+    {'get': {'/uri2', Router}},
+    {'post': {'/uri2', Router}},
+    {'put': {'/uri2', Router}},
+    {'patch': {'/uri2', Router}},
+    {'delete': {'/uri2', Router}},
+    [middleware]
+]
+
+istek: /uri2/uri1 [GET]
+
+const prefix = routes[i][get]?.uri
+if (routes[i][get]?.router) {
+    router = routes[i][get].router
+}
+
+router.route -> route.returnHandlers olarak değiştilecek
+önceden handlers metotları execute ediyordu artıık sadece metotları dönecek
+dönen metotlar app içinde handlers olarak adlandırılacak
+route da yaptığım gibi found uri öncesindeki middleware'ler bulunup tutulacak
+middleware olarak dizide tutulacaklar
+
+[...middleware, ...handlers] olarak tek bir dizide tutulacaklar ve execute edilecekler.
+
+*/

@@ -28,6 +28,12 @@ class Router {
   }
 
   use(...args) {
+    /**
+     * use method types {
+     * router.use(uri, handlers)
+     * router.use(middlewares)
+     * }
+     */
     if (typeof args[0] == 'string') {
       const uri = args[0]
       const handlers = args.slice(1);
@@ -69,21 +75,18 @@ class Router {
       }
     }
 
-    if (handlers.length == 0) {
-      res.status(404).json('no such route');
-    }
-
-    const executeHandlers = (index, handlers) => {
-      if (index < handlers.length) {
-        const currentHandler = handlers[index];
-        currentHandler(req, res, () => {
-          executeHandlers(index + 1, handlers);
-        });
-      }
-    };
+    // const executeHandlers = (index, handlers) => {
+    //   if (index < handlers.length) {
+    //     const currentHandler = handlers[index];
+    //     currentHandler(req, res, () => {
+    //       executeHandlers(index + 1, handlers);
+    //     });
+    //   }
+    // };
 
     handlers = [...middlewares, ...handlers];
-    executeHandlers(0, handlers)
+    return handlers
+    // executeHandlers(0, handlers)
   }
 }
 
