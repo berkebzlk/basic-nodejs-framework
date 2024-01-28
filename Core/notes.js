@@ -407,4 +407,11 @@ middleware olarak dizide tutulacaklar
 
 [...middleware, ...handlers] olarak tek bir dizide tutulacaklar ve execute edilecekler.
 
+route parametrelerini almak
+else {
+          // url'i parçala - route'taki url'i parçala
+          // parça sayısıları eşit ise
+          // : ile başlamayan parçalar aynı mı?
+          // : ile başlıyorsa [].push(parça)
+        }
 */
