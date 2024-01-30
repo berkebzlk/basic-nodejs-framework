@@ -29,7 +29,14 @@ app.use('/uri2', mw3, mw2, mw1, (req, res) => {res.json('uri3')})
 // app.use(uri, middlewares, router)
 app.use('/user', mw3, mw2, mw1, userRouter)
 
-
+// console.log(app.applicationRoutes)
 
 app.listen(PORT, () => console.log('server is listening on', PORT));
 
+
+// get: [
+//     [ [Function: mw1], [Function: mw2], [Function: mw3] ],
+//     { '/uri1': [Object] },   
+//     { '/uri2': [Object] },
+//     { '/user': [Object] }
+//   ],

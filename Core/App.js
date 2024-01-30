@@ -109,24 +109,45 @@ class App {
     };
 
     const routes = this.applicationRoutes[httpMethod];
+    const routesUris = [];
 
-    // searching routes that does not have router
     for (let i = 0; i < routes.length; i++) {
-      if (!routes[i][uri]?.router) {
-        if (routes[i][uri]?.handlers?.length > 0) {
-          applicationHandlers = routes[i][uri].handlers;
-          indexOfFoundUri = i;
-        }
+      const route = routes[i];
+
+      if (!Array.isArray(route)) {
+        routesUris.push(Object.keys(route)[0]);
       }
     }
 
-    // no route found. we will search only routes that has router
-    if (indexOfFoundUri == -1) {
-      // app router içinde dolaş
-      for (let i = 0; i < routes.length; i++) {
-        const appRouteUri = Object.keys(routes[i]);
+    for (let i = 0; i < routesUris.length; i++) {
+    
+        // 1- eşit mi?
+        if (routesUris[i] == uri) {
+            console.log(1)
+        } 
+        // 2- length eşit mi?
+        // 3- router içne git
+    }
 
-        const router = routes[i][appRouteUri]?.router;
+    
+    // app router içinde dolaş
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+
+      if (!Array.isArray(route)) {
+        routesUris.push(Object.keys(route));
+      }
+
+      // handler varsa ve router yoksa uri eşleşirse route bulundu demektir.
+      if (route?.handlers?.length > 0 && !route?.router) {
+        applicationHandlers = routes[i][uri].handlers;
+        indexOfFoundUri = i;
+      }
+      // router varsa
+      else if (route?.router) {
+        const router = route.router;
+
+        const appRouteUri = Object.keys(routes[i]);
 
         if (router?.routerApplicationRoutes) {
           const routerUris = [];

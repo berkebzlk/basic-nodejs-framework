@@ -415,3 +415,47 @@ else {
           // : ile başlıyorsa [].push(parça)
         }
 */
+        
+/*
+Router = {
+    'get': [
+        {'/index', {handlers: [handler1] }}
+    ]
+}
+
+'get': [
+    {'/uri1': {handlers:[function1]}}
+    [md1, md2]
+    {'/uri2': {handlers:[md1, function2]}}
+    {'/uri3': {handlers:[md1], router: Router}} -- /uri3/index
+]
+
+uriCompare(uri, incomingUri) {
+    if uri.length == incomingUri.length
+
+    parametreleri alacağız
+    obj = getParams(uri, incomingUri)
+    req.params = obj;
+    match demektir. route()
+}
+
+incomingUri = incomingUri.split('/')
+
+for getRoutes.length
+uri = Object.keys(getRoutes[i])
+uri = uri.split('/')
+
+if (uri == incomingUri) {
+
+} else if(compareUrisByParts(uri, incomingUri)){
+  if (getRoutes[i]?.router) {
+    router = getRoutes[i].router;
+    routerRoutes = router?.routerApplicationRoutes[httpMethod]
+    if (!routerRoutes) return
+
+    for routerRoutes.length
+        routerUri = Object.keys(routerRoutes[i])
+        
+  }  
+}
+*/
