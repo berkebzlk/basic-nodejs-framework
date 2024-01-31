@@ -108,87 +108,78 @@ class App {
       }
     };
 
-    const routes = this.applicationRoutes[httpMethod];
-    const routesUris = [];
+    const compareUriParts = (appUriParts, incomingUriParts) => {
+      if (appUriParts.length != incomingUriParts.length) return false;
 
-    for (let i = 0; i < routes.length; i++) {
-      const route = routes[i];
+      for (let i = 0; i < appUriParts.length; i++) {
+        if (appUriParts[i].charAt(0) == ':') continue;
 
-      if (!Array.isArray(route)) {
-        routesUris.push(Object.keys(route)[0]);
+        if (appUriParts[i] != incomingUriParts[i]) return false
       }
+      return true
     }
 
-    for (let i = 0; i < routesUris.length; i++) {
-    
-        // 1- eşit mi?
-        if (routesUris[i] == uri) {
-            console.log(1)
-        } 
-        // 2- length eşit mi?
-        // 3- router içne git
-    }
-
-    
-    // app router içinde dolaş
-    for (let i = 0; i < routes.length; i++) {
-      const route = routes[i];
-
-      if (!Array.isArray(route)) {
-        routesUris.push(Object.keys(route));
-      }
-
-      // handler varsa ve router yoksa uri eşleşirse route bulundu demektir.
-      if (route?.handlers?.length > 0 && !route?.router) {
-        applicationHandlers = routes[i][uri].handlers;
-        indexOfFoundUri = i;
-      }
-      // router varsa
-      else if (route?.router) {
-        const router = route.router;
-
-        const appRouteUri = Object.keys(routes[i]);
-
-        if (router?.routerApplicationRoutes) {
-          const routerUris = [];
-          const routerRoutes = router.routerApplicationRoutes[httpMethod];
-          // routerRoutes içinde dolaşıp keyleri al
-          for (let j = 0; j < routerRoutes.length; j++) {
-            if (!Array.isArray(routerRoutes[j])) {
-              routerUris.push(Object.keys(routerRoutes[j])[0]);
-            }
-          }
-
-          let routerUri = "";
-          // app uri + key == gelen uri?
-          for (let j = 0; j < routerUris.length; j++) {
-            if (appRouteUri + routerUris[j] == uri) {
-              routerUri = routerUris[j];
-            }
-          }
-
-          if (routerUri) {
-            if (routes[i][appRouteUri].handlers.length > 0) {
-              applicationHandlers = [
-                ...routes[i][appRouteUri].handlers,
-                ...routes[i][appRouteUri].router.route(
-                  routerUri,
-                  httpMethod,
-                  req,
-                  res
-                ),
-              ];
-            } else {
-              applicationHandlers = routes[i][appRouteUri].router.route(
-                routerUri,
-                httpMethod,
-                req,
-                res
-              );
-            }
-            indexOfFoundUri = i;
-          }
+    const getParams = (currentUriParts, incomingUriParts) => {
+      const paramIndexes = []
+      for (let i = 0; i < currentUriParts.length; i++) {
+        if (currentUriParts[i].startsWith(':')) {
+          paramIndexes.push(i)
         }
+      }
+
+      if (paramIndexes.length == 0) return null;
+
+      const obj = {}
+      paramIndexes.forEach(index => {
+        obj[currentUriParts[index].slice(1)] = incomingUriParts[index]
+      })
+
+      return obj
+    }
+
+    const routes = this.applicationRoutes[httpMethod];
+    const appRoutes = this.applicationRoutes[httpMethod];
+
+
+    for (let i = 0; i < appRoutes.length; i++) {
+      // this is middleware. not a route object
+      if (Array.isArray(appRoutes[i])) continue;
+
+      const appUri = Object.keys(appRoutes[i])[0]
+
+      const appUriParts = appUri.split('/')
+      const incomingUriParts = uri.split('/')
+
+      // if route contains a router
+      if (appRoutes[i][appUri]?.router) {
+        const routerRoutes = appRoutes[i][appUri].router.routerApplicationRoutes[httpMethod];
+
+        for (let j = 0; j < routerRoutes.length; j++) {
+          // this is router's middleware
+          if (Array.isArray(routerRoutes[j])) continue;
+          const routerUri = Object.keys(routerRoutes[j])[0];
+          const appAndRouterParts = (appUri + routerUri).split('/');
+
+          if (!compareUriParts(appAndRouterParts, incomingUriParts)) continue
+
+          // parametreleri çek
+          const obj = getParams(appAndRouterParts, incomingUriParts);
+          console.log('obj', obj)
+          // bulunan indexi ayarla -> i
+          indexOfFoundUri = i;
+          applicationHandlers = [...appRoutes[i][appUri].handlers, ...appRoutes[i][appUri].router.route(routerUri, httpMethod, req, res)]
+          break;
+        }
+      } else {
+        if (!compareUriParts(appUriParts, incomingUriParts)) continue;
+
+        const obj = getParams(appUriParts, incomingUriParts);
+
+        req.params = obj;
+
+        applicationHandlers = appRoutes[i][appUri].handlers
+        indexOfFoundUri = i;
+        break;
       }
     }
 

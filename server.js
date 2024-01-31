@@ -29,7 +29,11 @@ app.use('/uri2', mw3, mw2, mw1, (req, res) => {res.json('uri3')})
 // app.use(uri, middlewares, router)
 app.use('/user', mw3, mw2, mw1, userRouter)
 
-// console.log(app.applicationRoutes)
+// route parameters can be accessed by req.parans
+app.get('/user/:id', (req, res) => {
+    console.log(req.params.id)
+    res.json('req.params')
+})
 
 app.listen(PORT, () => console.log('server is listening on', PORT));
 
